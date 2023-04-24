@@ -7,17 +7,17 @@ from .views import PostViewSet, GroupViewSet, CommentViewSet
 
 router = DefaultRouter()
 router.register(
-    'posts',
+    r'posts',
     PostViewSet,
     basename='post'
 )
 router.register(
-    'groups',
+    r'groups',
     GroupViewSet,
     basename='group'
 )
 router.register(
-    'posts/(?P<post_id>\d+)/comments',
+    r'posts/(?P<post_id>\d+)/comments',
     CommentViewSet,
     basename='comment'
 )
