@@ -1,9 +1,7 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from .permissons import IsAuthorOrReadOnly
 from .serializers import PostSerializer, GroupSerializer, CommentSerializer
@@ -15,18 +13,8 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = (IsAuthorOrReadOnly, IsAuthenticated)
 
-    def create(self, request):
-        if self.request.user.is_authenticated:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save(author=request.user)
-                return Response(
-                    serializer.data,
-                    status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
